@@ -4,27 +4,27 @@ copy numbers. This implements the filter described by Calderazzo et al., Bioinfo
 
 # Arguments
 
-- `protein_at_observations::Array{Float64,2}`: Observed protein. The dimension is n x 2, where n is the number of observation time points.
+- `protein_at_observations::Array{eltype(state_space_variance),2}`: Observed protein. The dimension is n x 2, where n is the number of observation time points.
     The first column is the time, and the second column is the observed protein copy number at
     that time. The filter assumes that observations are generated with a fixed, regular time interval.
 
-- `model_parameters::Array{Float64,1}`: An array containing the model parameters in the following order:
+- `model_parameters::Array{eltype(state_space_variance),1}`: An array containing the model parameters in the following order:
     repression threshold, hill coefficient, mRNA degradation rate,protein degradation rate, basal transcription rate, translation rate,
     transcription delay.
 
-- `measurement_variance::Float64`: The variance in our measurement. This is given by Sigma epsilon in Calderazzo et. al. (2018).
+- `measurement_variance::eltype(state_space_variance)`: The variance in our measurement. This is given by Sigma epsilon in Calderazzo et. al. (2018).
 
 # Returns
 
-- `state_space_mean::Array{Float64,2}`: An array of dimension n x 3, where n is the number of inferred time points.
+- `state_space_mean::Array{eltype(state_space_variance),2}`: An array of dimension n x 3, where n is the number of inferred time points.
     The first column is time, the second column is the mean mRNA, and the third
     column is the mean protein. Time points are generated every minute
 
-- `state_space_variance::Array{Float64,2}`: An array of dimension 2n x 2n.
+- `state_space_variance::Array{eltype(state_space_variance),2}`: An array of dimension 2n x 2n.
           [ cov( mRNA(t0:tn),mRNA(t0:tn) ),    cov( protein(t0:tn),mRNA(t0:tn) ),
             cov( mRNA(t0:tn),protein(t0:tn) ), cov( protein(t0:tn),protein(t0:tn) ]
 
-- `predicted_observation_distributions::Array{Float64,2}`: An array of dimension n x 3 where n is the number of observation time points.
+- `predicted_observation_distributions::Array{eltype(state_space_variance),2}`: An array of dimension n x 3 where n is the number of observation time points.
     The first column is time, the second and third columns are the mean and variance
     of the distribution of the expected observations at each time point, respectively.
 """
@@ -146,7 +146,7 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
                                                  model_parameters[5],
                                                  model_parameters[6])
 
-    state_space_mean = Array{Float64}(undef,(total_number_of_states,3));#zeros((total_number_of_states,3))
+    state_space_mean = zeros(eltype(model_parameters),total_number_of_states,3);#zeros((total_number_of_states,3))
     state_space_mean[1:initial_number_of_states,2] .= steady_state[1]
     state_space_mean[1:initial_number_of_states,3] .= steady_state[2]
 
@@ -155,7 +155,7 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
     state_space_mean[:,1] .= LinRange(protein_at_observations[1,1]-discrete_delay,final_observation_time,total_number_of_states)
 
     # initialise initial covariance matrix
-    state_space_variance = zeros((2*(total_number_of_states),2*(total_number_of_states)));
+    state_space_variance = zeros(eltype(model_parameters),(2*(total_number_of_states),2*(total_number_of_states)));
 
     # set the mRNA and protein variance at negative times to the LNA approximation
     initial_mRNA_scaling = 20.0
@@ -170,7 +170,7 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
 
     observation_transform = [0.0 1.0]
 
-    predicted_observation_distributions = Array{Float64}(undef,(number_of_observations,3));#zeros(number_of_observations,3)
+    predicted_observation_distributions = Array{eltype(state_space_mean)}(undef,(number_of_observations,3));#zeros(number_of_observations,3)
     predicted_observation_distributions[1,1] = 0
     predicted_observation_distributions[1,2] = dot(observation_transform,state_space_mean[initial_number_of_states,2:3])
 
@@ -337,17 +337,17 @@ function kalman_prediction_step(state_space_mean,
 
     # we initialise all our matrices outside of the main for loop for improved performance
     # this is P(t,t)
-    current_covariance_matrix = Array{Float64}(undef,(2,2));#zeros((2,2))
+    current_covariance_matrix = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
     # this is P(t-tau,t) in page 5 of the supplementary material of Calderazzo et. al.
-    covariance_matrix_past_to_now = Array{Float64}(undef,(2,2));#zeros((2,2))
+    covariance_matrix_past_to_now = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
     # this is P(t,t-tau) in page 5 of the supplementary material of Calderazzo et. al.
-    covariance_matrix_now_to_past = Array{Float64}(undef,(2,2));#zeros((2,2))
+    covariance_matrix_now_to_past = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
     # This corresponds to P(s,t) in the Calderazzo paper
-    covariance_matrix_intermediate_to_current = Array{Float64}(undef,(2,2));#zeros((2,2))
+    covariance_matrix_intermediate_to_current = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
     # This corresponds to P(s,t-tau)
-    covariance_matrix_intermediate_to_past = Array{Float64}(undef,(2,2));#zeros((2,2))
+    covariance_matrix_intermediate_to_past = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
     # This corresponds to P(s,t+delta t)
-    covariance_matrix_intermediate_to_next = Array{Float64}(undef,(2,2));#zeros((2,2))
+    covariance_matrix_intermediate_to_next = Array{eltype(state_space_variance)}(undef,(2,2));#zeros((2,2))
 
     # derivations for the following are found in Calderazzo et. al. (2018)
     # g is [[-mRNA_degradation_rate,0],                  *[M(t),

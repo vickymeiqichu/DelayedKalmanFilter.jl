@@ -1,7 +1,7 @@
 """
 todo
 """
-function kalman_filter_mh(protein_observations,model_parameters,measurement_variance,number_of_samples; full_model::Bool=false)
+function kalman_filter_mh(protein_observations,model_parameters,measurement_variance,number_of_samples; full_model=false)
 
    if full_model
       @model full_kalman_model(protein_observations) = begin

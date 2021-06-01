@@ -15,6 +15,4 @@ using Test
     @test size(c) == (size(protein_at_observations,1),3)
 end
 
-# using ForwardDiff
-# log_likelihood_gradient(model_parameters,protein_at_observations,measurement_variance) = ForwardDiff.gradient(model_parameters -> calculate_log_likelihood_at_parameter_point(model_parameters,protein_at_observations,measurement_variance),model_parameters)
-# log_likelihood_gradient(model_parameters,protein_at_observations,measurement_variance)
+using ForwardDiff
