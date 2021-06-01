@@ -10,5 +10,8 @@ using Test
     number_of_samples = 20;
 
     output = kalman_filter_mh(protein_at_observations,model_parameters,measurement_variance,number_of_samples);
+    @test size(output.value.data[:,:,1]) == (number_of_samples,length(model_parameters)+1-2) # includes log prob
+
+    output = kalman_filter_mh(protein_at_observations,model_parameters,measurement_variance,number_of_samples; full_model=true);
     @test size(output.value.data[:,:,1]) == (number_of_samples,length(model_parameters)+1) # includes log prob
 end
