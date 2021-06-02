@@ -72,9 +72,6 @@ measurement_variance : float.
 Returns
 -------
 
-log_likelihood : float.
-    The log of the likelihood of the data.
-
 log_likelihood_derivative : numpy array.
     The derivative of the log likelihood of the data, wrt each model parameter
 """
@@ -82,4 +79,37 @@ function calculate_log_likelihood_derivative_at_parameter_point(protein_at_obser
     f_test = x -> calculate_log_likelihood_at_parameter_point(protein_at_observations,x,measurement_variance) # create single argument function
     g_test = x -> ForwardDiff.gradient(f_test, x)
     g_test(model_parameters)
+end #function
+
+"""
+Calculates the Hessian of the log likelihood, wrt each parameter, of our data given the
+parameters, using the Kalman filter and ForwardDiff.
+
+Parameters
+----------
+
+protein_at_observations : numpy array.
+    Observed protein. The dimension is n x 2, where n is the number of observation time points.
+    The first column is the time, and the second column is the observed protein copy number at
+    that time.
+
+model_parameters : numpy array.
+    An array containing the moderowl parameters in the following order:
+    repression_threshold, hill_coefficient, mRNA_degradation_rate,
+    protein_degradation_rate, basal_transcription_rate, translation_rate,
+    transcription_delay.
+
+measurement_variance : float.
+    The variance in our measurement. This is given by Sigma_e in Calderazzo et. al. (2018).
+
+Returns
+-------
+
+log_likelihood_hessian : Array.
+    The Hessian of the log likelihood of the data.
+"""
+function calculate_log_likelihood_hessian_at_parameter_point(protein_at_observations,model_parameters,measurement_variance)
+    f_test = x -> calculate_log_likelihood_at_parameter_point(protein_at_observations,x,measurement_variance) # create single argument function
+    h_test = x -> ForwardDiff.hessian(f_test, x)
+    h_test(model_parameters)
 end #function
