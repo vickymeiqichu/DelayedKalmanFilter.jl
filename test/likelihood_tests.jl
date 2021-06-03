@@ -19,4 +19,10 @@ using Test
     # test log likelihood and derivative are correct
     ll = calculate_log_likelihood_at_parameter_point(protein_at_observations,model_parameters,measurement_variance);
     @test ll ≈ readdlm(string(loading_path,"log_likelihood_value.csv"),',')[1]
+
+    lld = calculate_log_likelihood_derivative_at_parameter_point(protein_at_observations,model_parameters,measurement_variance);
+    @test all(lld .== readdlm(string(loading_path,"log_likelihood_auto_derivative_value.csv"),','))
+
+    hessian = calculate_log_likelihood_hessian_at_parameter_point(protein_at_observations,model_parameters,measurement_variance);
+    @test size(hessian) == (length(model_parameters),length(model_parameters))
 end

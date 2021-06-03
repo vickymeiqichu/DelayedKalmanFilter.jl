@@ -6,6 +6,7 @@ using Distributions
 using DelimitedFiles
 using Turing
 using DifferentialEquations
+using Distributed
 
 include("kalman_filter_alg.jl")
 include("log_likelihood.jl")
@@ -17,6 +18,6 @@ export calculate_log_likelihood_at_parameter_point,
        calculate_log_likelihood_derivative_at_parameter_point,
        calculate_log_likelihood_hessian_at_parameter_point
 export calculate_steady_state_of_ode
-export kalman_filter_mh, kalman_filter_NUTS
+export kalman_filter_mh, kalman_filter_NUTS#, kalman_filter_smMALA
 
 end # module
