@@ -36,7 +36,7 @@ function kalman_filter(protein_at_observations,model_parameters,measurement_vari
     # This is the time step dt in the forward euler scheme
     discretisation_time_step = 1.0
     # This is the delay as an integer multiple of the discretization timestep so that we can index with it
-    discrete_delay = Int64(round(time_delay/discretisation_time_step))
+    discrete_delay = Int64(round(floor(time_delay)/discretisation_time_step))
     number_of_hidden_states = Int64(round(observation_time_step/discretisation_time_step))
     initial_number_of_states = discrete_delay + 1
     total_number_of_states = initial_number_of_states + (number_of_observations - 1)*number_of_hidden_states
@@ -127,7 +127,7 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
     # This is the time step dt in the forward euler scheme
     discretisation_time_step = 1.0
     # This is the delay as an integer multiple of the discretization timestep so that we can index with it
-    discrete_delay = Int64(round(time_delay/discretisation_time_step))
+    discrete_delay = Int64(ceil(time_delay/discretisation_time_step))
 
     observation_time_step = protein_at_observations[2,1] - protein_at_observations[1,1]
     number_of_observations = size(protein_at_observations,1)
@@ -151,7 +151,7 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
 
     final_observation_time = protein_at_observations[end,1]
     # assign time entries
-    state_space_mean[:,1] .= LinRange(protein_at_observations[1,1]-discrete_delay,final_observation_time,total_number_of_states)
+    state_space_mean[:,1] .= LinRange(protein_at_observations[1,1]-time_delay,final_observation_time,total_number_of_states)
 
     # initialise initial covariance matrix
     state_space_variance = zeros(eltype(model_parameters),(2*(total_number_of_states),2*(total_number_of_states)));
@@ -324,6 +324,7 @@ function kalman_prediction_step(state_space_mean,
     transcription_delay = model_parameters[7]
 
     discrete_delay = Int64(round(transcription_delay/discretisation_time_step))
+    discrete_delay = Int64(ceil(transcription_delay/discretisation_time_step))
     number_of_hidden_states = Int64(round(observation_time_step/discretisation_time_step))
 
     # this is the number of states at t, i.e. before predicting towards t+observation_time_step
@@ -515,7 +516,7 @@ function kalman_update_step(state_space_mean,
                             observation_time_step,
                             measurement_variance)
     discretisation_time_step = state_space_mean[2,1] - state_space_mean[1,1]
-    discrete_delay = Int64(round(time_delay/discretisation_time_step))
+    discrete_delay = Int64(round(floor(time_delay)/discretisation_time_step))
     number_of_hidden_states = Int64(round(observation_time_step/discretisation_time_step))
 
     # this is the number of states at t+Deltat, i.e. after predicting towards t+observation_time_step
