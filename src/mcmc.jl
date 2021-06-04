@@ -9,7 +9,7 @@ function kalman_filter_mh(protein_observations,measurement_variance,number_of_sa
       @model function full_kalman_model(protein_observations,::Type{T} = Float64) where {T}
           model_parameters = Vector{T}(undef,7)
 
-          model_parameters[1] ~ Uniform(5000,15000) #repression_threshold
+          model_parameters[1] ~ Uniform(500,2*mean(protein_observations[:,2])) #repression_threshold
           model_parameters[2] ~ Uniform(2,6) #hill_coefficient
           model_parameters[3] ~ Uniform(log(2)/200,log(2)/10) #mRNA_degradation_rate
           model_parameters[4] ~ Uniform(log(2)/200,log(2)/10) #protein_degradation_rate
@@ -29,10 +29,10 @@ function kalman_filter_mh(protein_observations,measurement_variance,number_of_sa
 
     @model function kalman_model(protein_observations,::Type{T} = Float64) where {T}
           model_parameters = Vector{T}(undef,7)
-          model_parameters[3] = log(2)/30
-          model_parameters[4] = log(2)/90
+          model_parameters[3] = log(2)/30 # mRNA degradation
+          model_parameters[4] = log(2)/90 # protein degradation
 
-          model_parameters[1] ~ Uniform(5000,15000) #repression_threshold
+          model_parameters[1] ~ Uniform(500,2*mean(protein_observations[:,2])) #repression_threshold
           model_parameters[2] ~ Uniform(2,6) #hill_coefficient
           model_parameters[5] ~ Uniform(0.01,120) #basal_transcription_rate
           model_parameters[6] ~ Uniform(0.01,40) #translation_rate
@@ -58,7 +58,7 @@ function kalman_filter_NUTS(protein_observations,measurement_variance,number_of_
    if full_model
       @model function full_kalman_model(protein_observations,::Type{T} = Float64) where {T}
           model_parameters = Vector{T}(undef,7)
-          model_parameters[1] ~ Uniform(5000,15000) #repression_threshold
+          model_parameters[1] ~ Uniform(500,2*mean(protein_observations[:,2])) #repression_threshold
           model_parameters[2] ~ Uniform(2,6) #hill_coefficient
           model_parameters[3] ~ Uniform(log(2)/200,log(2)/10) #mRNA_degradation_rate
           model_parameters[4] ~ Uniform(log(2)/200,log(2)/10) #protein_degradation_rate
@@ -69,9 +69,9 @@ function kalman_filter_NUTS(protein_observations,measurement_variance,number_of_
       end
 
       if n_threads > 1
-          c1 = sample(full_kalman_model(protein_observations),DynamicNUTS(),MCMCThreads(),number_of_samples,n_threads);
+          c1 = sample(full_kalman_model(protein_observations),NUTS(0.65),MCMCThreads(),number_of_samples,n_threads);
       else
-          c1 = sample(full_kalman_model(protein_observations),DynamicNUTS(),number_of_samples);
+          c1 = sample(full_kalman_model(protein_observations),NUTS(0.65),number_of_samples);
       end # if-else
 
       return c1
@@ -79,13 +79,11 @@ function kalman_filter_NUTS(protein_observations,measurement_variance,number_of_
 
    @model function kalman_model(protein_observations,::Type{T} = Float64) where {T}
        model_parameters = Vector{T}(undef,7)
-       model_parameters[3] = log(2)/30
-       model_parameters[4] = log(2)/90
+       model_parameters[3] = log(2)/30 # mRNA degradation
+       model_parameters[4] = log(2)/90 # protein degradation
 
-       model_parameters[1] ~ Uniform(5000,15000) #repression_threshold
+       model_parameters[1] ~ Uniform(500,2*mean(protein_observations[:,2])) #repression_threshold
        model_parameters[2] ~ Uniform(2,6) #hill_coefficient
-       # model_parameters[3] ~ Uniform(log(2)/200,log(2)/10) #mRNA_degradation_rate
-       # model_parameters[4] ~ Uniform(log(2)/200,log(2)/10) #protein_degradation_rate
        model_parameters[5] ~ Uniform(0.01,120) #basal_transcription_rate
        model_parameters[6] ~ Uniform(0.01,40) #translation_rate
        model_parameters[7] ~ Uniform(1,40) #transcriptional_delay
