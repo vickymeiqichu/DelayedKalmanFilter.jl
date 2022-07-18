@@ -145,8 +145,8 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
                                                  model_parameters[4],
                                                  model_parameters[5],
                                                  model_parameters[6])
-    # state_space_mean = zeros(eltype(model_parameters),total_number_of_states,3);#zeros((total_number_of_states,3))
-    state_space_mean = Matrix{eltype(model_parameters)}(undef,total_number_of_states,3)
+    state_space_mean = zeros(eltype(model_parameters),total_number_of_states,3);#zeros((total_number_of_states,3))
+    # state_space_mean = Matrix{eltype(model_parameters)}(undef,total_number_of_states,3)
     state_space_mean[1:initial_number_of_states,2] .= steady_state[1]
     state_space_mean[1:initial_number_of_states,3] .= steady_state[2]
 
@@ -155,8 +155,8 @@ function kalman_filter_state_space_initialisation(protein_at_observations,model_
     state_space_mean[:,1] = LinRange(protein_at_observations[1,1]-time_delay,final_observation_time,total_number_of_states)
 
     # initialise initial covariance matrix
-    # state_space_variance = zeros(eltype(model_parameters),(2*(total_number_of_states),2*(total_number_of_states)));
-    state_space_variance = Matrix{eltype(model_parameters)}(undef,2*total_number_of_states,2*total_number_of_states)
+    state_space_variance = zeros(eltype(model_parameters),(2*(total_number_of_states),2*(total_number_of_states)));
+    # state_space_variance = Matrix{eltype(model_parameters)}(undef,2*total_number_of_states,2*total_number_of_states)
 
     # set the mRNA and protein variance at negative times to the LNA approximation
     initial_mRNA_scaling = 20.0
