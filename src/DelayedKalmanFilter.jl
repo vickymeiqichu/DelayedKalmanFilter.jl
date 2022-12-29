@@ -4,6 +4,7 @@ using ForwardDiff
 using LinearAlgebra
 using Distributions
 using DelimitedFiles
+using NonlinearSolve
 using Turing
 using DifferentialEquations
 using Distributed

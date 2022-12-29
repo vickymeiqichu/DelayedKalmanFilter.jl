@@ -78,5 +78,7 @@ function calculate_steady_state_of_ode(repression_threshold,
    # create the SteadyStateProblem we want to solve
    prob = SteadyStateProblem(hes_ode!, initial_guess, parameters)
    # solve the problem
-   steady_state_solution = solve(prob,SSRootfind())
+   nl_prob = NonlinearProblem(prob)
+   return solve(nl_prob, DynamicSS(Tsit5())).u
+   # steady_state_solution = solve(prob,SSRootfind())
 end #function
