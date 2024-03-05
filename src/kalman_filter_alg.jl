@@ -162,11 +162,10 @@ function initialise_state_space_mean(steady_state, τ)
   tspan = (-τ, 0.0)
   prob = ODEProblem(initial_mean!, u0, tspan)
   sol = solve(prob, Tsit5())
-  print(sol)
   sol_f = t -> sol(t)
-  print("Solution Object?")
-  print(SolutionObject(sol_f, tspan))
-  print(" ")
+  println("Solution Object?")
+  println(SolutionObject(sol_f, tspan))
+  println()
   [SolutionObject(sol_f, tspan)] # mean is an array of solution objects
 end
 
