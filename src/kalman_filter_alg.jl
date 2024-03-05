@@ -158,6 +158,9 @@ function initialise_state_space_mean(steady_state, τ)
   function initial_mean!(du, u, p, t)
     du .= [0.0; 0.0]
   end
+  println("inputs are the steady state and time")
+  println(steady_state)
+  println(τ)
   u0 = steady_state
   tspan = (-τ, 0.0)
   prob = ODEProblem(initial_mean!, u0, tspan)
