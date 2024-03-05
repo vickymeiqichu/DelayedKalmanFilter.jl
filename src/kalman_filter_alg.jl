@@ -1,5 +1,6 @@
 mutable struct SolutionObject{F, T1, T2}#<:AbstractFloat}
-  at_time::F # Function (1-d continuous)
+  at
+  _time::F # Function (1-d continuous)
   tspan::Tuple{T1, T2} # Tuple{Float64, Float64}
 end
 
@@ -161,8 +162,11 @@ function initialise_state_space_mean(steady_state, τ)
   tspan = (-τ, 0.0)
   prob = ODEProblem(initial_mean!, u0, tspan)
   sol = solve(prob, Tsit5())
+  print(sol)
   sol_f = t -> sol(t)
-
+  print("Solution Object?")
+  print(SolutionObject(sol_f, tspan))
+  print(" ")
   [SolutionObject(sol_f, tspan)] # mean is an array of solution objects
 end
 
@@ -257,7 +261,9 @@ function kalman_filter_state_space_initialisation(
 
   # construct system state space
   τ = model_parameters[7]
+
   means = initialise_state_space_mean(steady_state, τ)
+  print("means")
   variances = initialise_state_space_variance(steady_state, τ)
   off_diagonals, off_diagonal_timepoints, off_diagonal_timestep = initialise_off_diagonals(steady_state, τ, off_diagonal_steps)
 
