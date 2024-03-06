@@ -1,6 +1,5 @@
 mutable struct SolutionObject{F, T1, T2}#<:AbstractFloat}
-  at
-  _time::F # Function (1-d continuous)
+  at_time::F # Function (1-d continuous)
   tspan::Tuple{T1, T2} # Tuple{Float64, Float64}
 end
 
