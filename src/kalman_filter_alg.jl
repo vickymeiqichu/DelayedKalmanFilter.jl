@@ -157,11 +157,11 @@ function initialise_state_space_mean(steady_state, τ)
   function initial_mean!(du, u, p, t)
     du .= [0.0; 0.0]
   end
-  println("input: steady state")
-  println(steady_state)
+  #println("input: steady state")
+  #println(steady_state)
 
-  println("input: time")
-  println(τ)
+  #println("input: time")
+  #println(τ)
 
   u0 = steady_state
   tspan = (-τ, 0.0)
@@ -183,7 +183,7 @@ function initialise_state_space_mean(steady_state, τ)
   #println("solnobject")
   #println(SolutionObject(sol_f, tspan))
   #println("end of prints")
-  println()
+  #println()
   [SolutionObject(sol_f, tspan)] # mean is an array of solution objects
 end
 
@@ -658,16 +658,25 @@ function predict_variance_and_off_diagonals!(
     end
     
     println("covariance")
-    println(convariance)
+    println(covariance)
+    println()
+
     println("instant_jacobian")
     println(instant_jacobian)
+    println()
+
     println("covariance_matrix_intermediate_to_past")
     println(covariance_matrix_intermediate_to_past)
+    println()
+
     println("delayed_jacobian")
     println(delayed_jacobian)
+    println()
+
     dcovariance .= covariance * instant_jacobian' .+ covariance_matrix_intermediate_to_past * delayed_jacobian'
     println("dcovariance")
     println(dcovariance)
+    println()
   end
 
   # if typeof(system_state.delay) <: AbstractFloat
