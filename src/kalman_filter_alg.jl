@@ -653,25 +653,43 @@ function predict_variance_and_off_diagonals!(
 
     if s < 0 || past_time < 0
       covariance_matrix_intermediate_to_past = zeros(2, 2)
+      println("s<0 OR past_time <0")
+      println("covariance_matrix_intermediate_to_past")
+      println(covariance_matrix_intermediate_to_past)
+      println("s:")
+      println(s)
+      println("past_time:")
+      print(past_time)
+      println()
     else
       covariance_matrix_intermediate_to_past = history(s, past_time)
+      println("OR not true")
+      println("covariance_matrix_intermediate_to_past")
+      println(covariance_matrix_intermediate_to_past)
+      println("s:")
+      println(s)
+      println("past_time:")
+      print(past_time)
+      println("history(s, past_time)")
+      println(history(s, past_time))
+      println()
     end
     
-    println("covariance")
-    println(covariance)
-    println()
+    #println("covariance")
+    #println(covariance)
+    #println()
 
-    println("instant_jacobian")
-    println(instant_jacobian)
-    println()
+    #println("instant_jacobian")
+    #println(instant_jacobian)
+    #println()
 
     println("covariance_matrix_intermediate_to_past")
     println(covariance_matrix_intermediate_to_past)
     println()
 
-    println("delayed_jacobian")
-    println(delayed_jacobian)
-    println()
+    #println("delayed_jacobian")
+    #println(delayed_jacobian)
+    #println()
 
     dcovariance .= covariance * instant_jacobian' .+ covariance_matrix_intermediate_to_past * delayed_jacobian'
     println("dcovariance")
