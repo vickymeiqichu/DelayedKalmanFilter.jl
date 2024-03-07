@@ -165,24 +165,24 @@ function initialise_state_space_mean(steady_state, τ)
 
   u0 = steady_state
   tspan = (-τ, 0.0)
-  println("tspan")
-  println(tspan)
+  #println("tspan")
+  #println(tspan)
 
   prob = ODEProblem(initial_mean!, u0, tspan)
-  println("prob")
-  println(prob)
+  #println("prob")
+  #println(prob)
 
   sol = solve(prob, Tsit5())
-  println("sol")
-  println(sol)
+  #println("sol")
+  #println(sol)
 
   sol_f = t -> sol(t)
-  println("sol_f")
-  println(sol_f)
+  #println("sol_f")
+  #println(sol_f)
 
-  println("solnobject")
-  println(SolutionObject(sol_f, tspan))
-  println("end of prints")
+  #println("solnobject")
+  #println(SolutionObject(sol_f, tspan))
+  #println("end of prints")
   println()
   [SolutionObject(sol_f, tspan)] # mean is an array of solution objects
 end
@@ -656,8 +656,18 @@ function predict_variance_and_off_diagonals!(
     else
       covariance_matrix_intermediate_to_past = history(s, past_time)
     end
-
+    
+    println("covariance")
+    println(convariance)
+    println("instant_jacobian")
+    println(instant_jacobian)
+    println("covariance_matrix_intermediate_to_past")
+    println(covariance_matrix_intermediate_to_past)
+    println("delayed_jacobian")
+    println(delayed_jacobian)
     dcovariance .= covariance * instant_jacobian' .+ covariance_matrix_intermediate_to_past * delayed_jacobian'
+    println("dcovariance")
+    println(dcovariance)
   end
 
   # if typeof(system_state.delay) <: AbstractFloat
