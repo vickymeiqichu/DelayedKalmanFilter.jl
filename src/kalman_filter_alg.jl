@@ -685,18 +685,20 @@ function predict_variance_and_off_diagonals!(
     #println(instant_jacobian)
     #println()
 
-    println("covariance_matrix_intermediate_to_past")
-    println(covariance_matrix_intermediate_to_past)
-    println()
+    #println("covariance_matrix_intermediate_to_past")
+    #println(covariance_matrix_intermediate_to_past)
+    #println()
 
     #println("delayed_jacobian")
     #println(delayed_jacobian)
     #println()
 
     dcovariance .= covariance * instant_jacobian' .+ covariance_matrix_intermediate_to_past * delayed_jacobian'
-    println("dcovariance")
-    println(dcovariance)
-    println()
+    if isnothing(covariance_matrix_intermediate_to_past) == true
+      println("dcovariance")
+      println(dcovariance)
+      println()
+    end
   end
 
   # if typeof(system_state.delay) <: AbstractFloat
