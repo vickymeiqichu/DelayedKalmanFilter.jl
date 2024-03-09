@@ -280,7 +280,7 @@ function kalman_filter_state_space_initialisation(
   τ = model_parameters[7]
 
   means = initialise_state_space_mean(steady_state, τ)
-  print("means")
+  #print("means")
   variances = initialise_state_space_variance(steady_state, τ)
   off_diagonals, off_diagonal_timepoints, off_diagonal_timestep = initialise_off_diagonals(steady_state, τ, off_diagonal_steps)
 
