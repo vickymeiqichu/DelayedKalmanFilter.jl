@@ -663,7 +663,7 @@ function predict_variance_and_off_diagonals!(
       #println()
     else
       covariance_matrix_intermediate_to_past = history(s, past_time)
-      println(history(s, past_time)
+      println(history(s, past_time))
       println(past_time)
       if isnothing(covariance_matrix_intermediate_to_past) == true
         println("OR not true")
