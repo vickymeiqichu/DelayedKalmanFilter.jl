@@ -650,7 +650,6 @@ function predict_variance_and_off_diagonals!(
     past_protein = get_mean_at_time(past_time, system_state)[2]
 
     delayed_jacobian = construct_delayed_jacobian(model_parameters, past_protein)
-    println(past_time)
 
     if s < 0 || any(<(0), past_time)
       covariance_matrix_intermediate_to_past = zeros(2, 2)
@@ -664,6 +663,8 @@ function predict_variance_and_off_diagonals!(
       #println()
     else
       covariance_matrix_intermediate_to_past = history(s, past_time)
+      println(history(s, past_time)
+      println(past_time)
       if isnothing(covariance_matrix_intermediate_to_past) == true
         println("OR not true")
         println("covariance_matrix_intermediate_to_past")
