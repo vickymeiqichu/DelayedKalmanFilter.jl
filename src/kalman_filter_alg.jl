@@ -663,20 +663,20 @@ function predict_variance_and_off_diagonals!(
       #println()
     else
       covariance_matrix_intermediate_to_past = history(s, past_time)
-      println(history(s, past_time))
-      println(past_time)
-      if isnothing(covariance_matrix_intermediate_to_past) == true
-        println("OR not true")
-        println("covariance_matrix_intermediate_to_past")
-        println(covariance_matrix_intermediate_to_past)
-        println("s:")
-        println(s)
-        println("past_time:")
-        print(past_time)
-        println("history(s, past_time)")
-        println(history(s, past_time))
-        println()
-      end
+      #println(history(s, past_time))
+      #println(past_time)
+      #if isnothing(covariance_matrix_intermediate_to_past) == true
+        #println("OR not true")
+        #println("covariance_matrix_intermediate_to_past")
+        #println(covariance_matrix_intermediate_to_past)
+        #println("s:")
+        #println(s)
+        #println("past_time:")
+        #print(past_time)
+        #println("history(s, past_time)")
+        #println(history(s, past_time))
+        #println()
+      #end
     end
     
     #println("covariance")
@@ -696,11 +696,11 @@ function predict_variance_and_off_diagonals!(
     #println()
 
     dcovariance .= covariance * instant_jacobian' .+ covariance_matrix_intermediate_to_past * delayed_jacobian'
-    if isnothing(covariance_matrix_intermediate_to_past) == true
-      println("dcovariance")
-      println(dcovariance)
-      println()
-    end
+    #if isnothing(covariance_matrix_intermediate_to_past) == true
+      #println("dcovariance")
+      #println(dcovariance)
+      #println()
+    #end
   end
 
   # if typeof(system_state.delay) <: AbstractFloat
